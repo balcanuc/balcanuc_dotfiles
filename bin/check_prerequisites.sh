@@ -9,7 +9,11 @@ function check_cmd() {
     fi
 }
 
+<<<<<<< HEAD
 cmds=("tmux" "vim" "unar" "docker" "shellcheck" "java" "python" "ruby")
+=======
+cmds=("tmux" "vim" "unar" "docker" "shellcheck" "java" "python" "ruby" "perl")
+>>>>>>> minor changes
 
 function main() {
 
