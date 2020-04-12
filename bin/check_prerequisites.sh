@@ -9,13 +9,30 @@ function check_cmd() {
     fi
 }
 
-cmds=("tmux" "vim" "unar" "docker" "shellcheck" "java" "python" "ruby" "perl")
+function print_os_specifics() {
+    echo "uname output"
+    uname --all
+    echo "hostname"
+    hostname
+    echo "free output"
+    free
+    echo "df output"
+    df -h
+    echo "groups output"
+    groups
+}
 
-function main() {
+cmds=("tmux" "vim" "unar" "docker" "shellcheck" "java" "python" "ruby" "perl" "bc" "jq" "git")
 
+function probe_binary_existence() {
     for cmd in "${cmds[@]}"; do
         check_cmd "$cmd"
     done
+}
+
+function main() {
+    print_os_specifics
+    probe_binary_existence
 }
 
 main

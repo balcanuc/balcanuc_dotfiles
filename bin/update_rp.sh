@@ -1,3 +1,3 @@
 #!/bin/sh
-sudo apt-get update
-sudo apt-get git
+sudo apt update
+sudo apt upgrade
