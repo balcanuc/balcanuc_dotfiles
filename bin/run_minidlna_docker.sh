@@ -1,5 +1,8 @@
 #!/bin/sh
+
+# this is to print commands before get executed
 set -x
+
 docker run -d \
   --name=minidlna \
   --net=host \
