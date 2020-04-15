@@ -69,3 +69,5 @@
   
 [core]
 	editor = vim
+[remote "origin"]
+	push = HEAD
