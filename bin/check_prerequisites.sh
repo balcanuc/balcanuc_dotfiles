@@ -22,7 +22,7 @@ function print_os_specifics() {
     groups
 }
 
-cmds=("tmux" "vim" "unar" "docker" "shellcheck" "java" "python" "ruby" "perl" "bc" "jq" "git" "nmon" "mc" "nc" "vi")
+cmds=("tmux" "vim" "unar" "docker" "shellcheck" "java" "python" "ruby" "perl" "bc" "jq" "git" "nmon" "mc" "nc" "vi" "socat")
 
 function probe_binary_existence() {
     for cmd in "${cmds[@]}"; do
