@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ps aux --sort=-%mem | awk 'NR<=10{print $0}'
+
