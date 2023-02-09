@@ -1,61 +1,126 @@
+[user]
+	email = balcanuc@gmail.com
+	name = Cristi Balcanu
+[color]
+  # Use colors in Git commands that are capable of colored output when outputting to the terminal
+  ui = auto
 [alias]
-	# View the SHA, description, and history graph of the latest 20 commits
-	lg = log --pretty=oneline -n 20 --graph
-	# alias for checkout
+  	# List available aliases
+	aliases = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
+	# Command shortcuts
+	ci = commit
 	co = checkout
+	st = status
 	# alias for branch
 	br = branch
-	# alias that reverts stash
-	unstash = stash pop
+	b = branch
+	# all
+	ba = branch --all
+	# verbose
+	bv = branch --verbose
+	bb = branch --verbose --all
+	branches = branch --all
+
+    # courtesy of https://stackoverflow.com/a/34467298
+	# https://charlesreid1.github.io/git-workflows-part-1-supercharging-your-git-config.html
+	# https://github.com/mathiasbynens/dotfiles/blob/main/.gitconfig
+    lg = !"git lg1"
+    lg1 = !"git lg1-specific --all"
+    lg2 = !"git lg2-specific --all"
+    lg3 = !"git lg3-specific --all"
+
+    lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
+    lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+    lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
+    l = log --pretty=oneline -n 20 --graph --abbrev-commit
+
+	# fetch
+	f = fetch --all
+
+	# remote 
+	r = remote --verbose
+    rv = remote --verbose
+    ra = remote --verbose
+	remotes = remote --verbose
+
+	# git diff to see unstaged changes and git cdiff to see staged changes
+	cdiff = diff --cached
+    cd = diff --cached
+
+    # Amend the currently staged files to the latest commit
+    amend = commit --amend --reuse-message=HEAD
+
+    # Oops
+    fix = commit --amend --reuse-message=HEAD --edit
+
+	# Useful when you have to update your last commit
+	# with staged files without editing the commit message.
+	oops = commit --amend --no-edit
+
+	# Interactive rebase with the given number of latest commits
+	reb = "!r() { git rebase -i HEAD~$1; }; r"
+
+    # Show the diff between the latest commit and the current state
+    d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+
+    # `git di $number` shows the diff between the state `$number` revisions ago and the current state
+    di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+
 	# View the current working tree status using the short format
 	s = status -s
-	# Show the diff between the latest commit and the current state
-	d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
-	# `git di $number` shows the diff between the state `$number` revisions ago and the current state
-	di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+	ss = status
+	# alias that reverts stash
+	unstash = stash pop
+
 	# Pull in remote changes for the current repository and all its submodules
 	p = !"git pull; git submodule foreach git pull origin master"
 	# Clone a repository including all submodules
 	c = clone --recursive
 	# Commit all changes
 	ca = !git add -A && git commit -av
-	# Switch to a branch, creating it if necessary
-	go = checkout -B
+
+	# Switch to a branch, creating it if necessary.
+	go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+	
 	# Show verbose output about tags, branches or remotes
-	tags = tag -l
-	branches = branch -a
-	remotes = remote -v
+	tags = tag --list
 	# Credit an author on the latest commit
 	credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
-	# Interactive rebase with the given number of latest commits
-	reb = "!r() { git rebase -i HEAD~$1; }; r"
 
-[user]
-	email = balcanuc@gmail.com
-	name = Cristi Balcanu
+	# Remove the old tag with this name and tag the latest commit with it.
+	retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
+
+	# Find tags containing commit
+	ft = "!f() { git describe --always --contains $1; }; f"
+
+	# Find commits by source code
+	fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+
+	# Find commits by commit message
+	fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+
+	# Show the user email for the current repository.
+	whoami = config user.email
+
 
 [credential]
 	helper = store
 
-[color]
-  # Use colors in Git commands that are capable of colored output when outputting to the terminal
-  ui = auto
-
 [color "branch"]
-  current = yellow reverse
-  local   = yellow
-  remote  = green
+	current = yellow reverse
+	local   = yellow
+	remote  = green
 
 [color "diff"]
-  meta = yellow bold
-  frag = magenta bold
-  old  = red bold
-  new  = green bold
+	meta = yellow bold
+	frag = magenta bold # line info
+	old = red # deletions
+	new = green # additions
 
 [color "status"]
-  added     = yellow
-  changed   = green
-  untracked = cyan
+	added     = yellow
+	changed   = green
+	untracked = cyan
 
 [merge]
   # Include summaries of merged commits in newly created merge commit messages
@@ -68,5 +133,28 @@
   
 [core]
 	editor = vim
+
 [remote "origin"]
 	push = HEAD
+
+[diff]
+	# Detect copies as well as renames.
+	renames = copies
+
+[diff "bin"]
+	# Use `hexdump` to diff binary files.
+	textconv = hexdump -v -C
+
+[merge]
+	# Include summaries of merged commits in newly created merge commit messages
+	log = true
+
+[push]
+
+	# https://git-scm.com/docs/git-config#git-config-pushdefault
+	default = simple
+	# Make `git push` push relevant annotated tags when pushing branches out.
+	followTags = true
+
+[init]
+	defaultBranch = main
